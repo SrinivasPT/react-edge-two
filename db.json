@@ -1,0 +1,32 @@
+{
+    "form-config": [
+        {
+            "id": "FORM->CLUSTER-DETAIL",
+            "buttons": "SAVE",
+            "refName": "form->cluster",
+            "sections": ["section->cluster"],
+            "sectionRepository": [
+                {
+                    "width": "FULL",
+                    "refName": "section->cluster",
+                    "controls": [
+                        {
+                            "key": "productCode",
+                            "label": "Product",
+                            "width": "ONE_THIRD",
+                            "refName": "product_info=>product_code",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1",
+                            "sectionRefName": "section->product-detail"
+                        }
+                    ],
+                    "dataPath": "productDetail",
+                    "typeCode": "CARD_WITH_HEADER"
+                }
+            ],
+            "additionalSections": []
+        }
+    ],
+    "cluster": [{ "id": 1000 }],
+    "DOMAIN_DATA": []
+}

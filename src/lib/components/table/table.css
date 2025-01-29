@@ -1,0 +1,15 @@
+.table-wrapper-scroll-y {
+    display: block;
+    max-height: 400px; /* Adjust this height as needed */
+    overflow-y: auto;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 400px; /* Adjust this height as needed */
+    overflow: auto;
+}
+
+.table-responsive > .table-wrapper-scroll-y > .table {
+    margin-bottom: 0;
+}
