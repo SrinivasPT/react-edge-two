@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { RichTreeView, TreeItem } from '@mui/x-tree-view';
-import { IconButton, Menu, MenuItem } from '@mui/material';
-import { MoreVert as MoreVertIcon, ExpandMore as ExpandMoreIcon, ChevronRight as ChevronRightIcon } from '@mui/icons-material';
-import { ControlLabel } from './ControlLabel';
-import { FieldErrorControl } from './FieldErrorControl';
+import React, { useState, useEffect } from 'react';
+import { SimpleTreeView, TreeItem } from '@mui/x-tree-view';
+import { Menu, MenuItem } from '@mui/material';
 
 export interface TreeNode {
     id: string;
@@ -12,48 +9,38 @@ export interface TreeNode {
 }
 
 export interface TreeControlProps {
-    value: TreeNode[];
-    dataPath: string;
+    data: TreeNode[];
     label: string;
-    hideLabel?: boolean;
-    isRequired?: boolean;
     onAddNode: (node: TreeNode) => void;
     onDeleteNode: (nodeId: string) => void;
     onMoveNode: (nodeId: string, newParentId: string) => void;
-    onNodeSelect?: (nodeId: string | null) => void;
-    allowAdd?: boolean;
-    allowDelete?: boolean;
-    allowMove?: boolean;
 }
 
-export const TreeControl: React.FC<TreeControlProps> = ({
-    value,
-    dataPath,
-    label,
-    hideLabel,
-    isRequired,
-    onAddNode,
-    onDeleteNode,
-    onMoveNode,
-    onNodeSelect,
-    allowAdd = true,
-    allowDelete = true,
-    allowMove = true,
-}) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectedNode, setSelectedNode] = useState<string | null>(null);
+export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode, onDeleteNode, onMoveNode }) => {
+    const [contextMenu, setContextMenu] = useState<{
+        mouseX: number;
+        mouseY: number;
+        nodeId: string;
+    } | null>(null);
+    const [selectedNode, setSelectedNodeId] = useState<string | null>(null);
+    const [potentialParents, setPotentialParents] = useState<TreeNode[]>([]);
+    const [showMoveOptions, setShowMoveOptions] = useState(false);
 
-    const handleNodeSelect = (event: React.SyntheticEvent, nodeId: string | null) => {
-        setSelectedNode(nodeId);
-        onNodeSelect?.(nodeId);
-    };
-
-    const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleContextMenu = (event: React.MouseEvent, nodeId: string) => {
+        event.preventDefault();
+        event.stopPropagation(); // Stop event from bubbling up
+        setSelectedNodeId(nodeId);
+        setContextMenu({
+            mouseX: event.clientX,
+            mouseY: event.clientY,
+            nodeId,
+        });
     };
 
     const handleMenuClose = () => {
-        setAnchorEl(null);
+        setContextMenu(null);
+        setShowMoveOptions(false);
+        setSelectedNodeId(null);
     };
 
     const handleAddNode = () => {
@@ -65,7 +52,7 @@ export const TreeControl: React.FC<TreeControlProps> = ({
     const handleDeleteNode = () => {
         if (selectedNode) {
             onDeleteNode(selectedNode);
-            setSelectedNode(null);
+            setSelectedNodeId(null);
             handleMenuClose();
         }
     };
@@ -73,44 +60,88 @@ export const TreeControl: React.FC<TreeControlProps> = ({
     const handleMoveNode = (newParentId: string) => {
         if (selectedNode) {
             onMoveNode(selectedNode, newParentId);
-            setSelectedNode(null);
+            setSelectedNodeId(null);
             handleMenuClose();
         }
     };
 
-    const renderTree = (nodes: TreeNode) => (
-        <TreeItem key={nodes.id} itemId={nodes.id} label={nodes.label}>
-            {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
+    const buildParentList = (nodes: TreeNode[], excludeId: string): TreeNode[] => {
+        return nodes
+            .filter((node) => node.id !== excludeId)
+            .map((node) => ({
+                ...node,
+                children: node.children ? buildParentList(node.children, excludeId) : [],
+            }));
+    };
+
+    useEffect(() => {
+        if (selectedNode) {
+            const parents = buildParentList(data, selectedNode);
+            setPotentialParents(parents);
+        }
+    }, [selectedNode]);
+
+    const renderTree = (node: TreeNode) => (
+        <TreeItem
+            key={node.id}
+            itemId={node.id}
+            label={
+                <div
+                    onContextMenu={(e) => handleContextMenu(e, node.id)}
+                    style={{
+                        padding: '4px',
+                        borderRadius: '4px',
+                        userSelect: 'none',
+                        width: '100%',
+                    }}
+                >
+                    {node.label}
+                </div>
+            }
+            sx={{
+                '& .MuiTreeItem-content:hover': { backgroundColor: 'action.hover' },
+                '& .MuiTreeItem-root': { position: 'relative' },
+            }}
+        >
+            {Array.isArray(node.children) ? node.children.map(renderTree) : null}
         </TreeItem>
     );
 
     return (
         <>
-            <ControlLabel htmlFor={dataPath} label={label} hideLabel={hideLabel} isRequired={isRequired} />
-            <RichTreeView
-                slots={{ expandIcon: ChevronRightIcon, collapseIcon: ExpandMoreIcon }}
-                onSelectedItemsChange={handleNodeSelect}
-                items={value}
+            <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>{label}</div>
+            <SimpleTreeView>{data.map(renderTree)}</SimpleTreeView>
+            <Menu
+                open={contextMenu !== null}
+                disablePortal
+                anchorReference="anchorPosition"
+                anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
+                onClose={handleMenuClose}
+                slotProps={{ paper: { elevation: 3, sx: { minWidth: 150 } } }}
             >
-                {value.map((node) => renderTree(node))}
-            </RichTreeView>
-            <IconButton onClick={handleMenuClick}>
-                <MoreVertIcon />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                {allowAdd && <MenuItem onClick={handleAddNode}>Add Node</MenuItem>}
-                {allowDelete && (
-                    <MenuItem onClick={handleDeleteNode} disabled={!selectedNode}>
-                        Delete Node
-                    </MenuItem>
-                )}
-                {allowMove && (
-                    <MenuItem onClick={() => handleMoveNode('parent-id')} disabled={!selectedNode}>
-                        Move Node
-                    </MenuItem>
-                )}
+                {showMoveOptions
+                    ? [
+                          <MenuItem key="back" onClick={() => setShowMoveOptions(false)}>
+                              ← Back
+                          </MenuItem>,
+                          ...potentialParents.map((parent) => (
+                              <MenuItem key={parent.id} onClick={() => handleMoveNode(parent.id)}>
+                                  Move to: {parent.label}
+                              </MenuItem>
+                          )),
+                      ]
+                    : [
+                          <MenuItem key="add" onClick={handleAddNode}>
+                              Add Node
+                          </MenuItem>,
+                          <MenuItem key="delete" onClick={handleDeleteNode} disabled={!selectedNode}>
+                              Delete Node
+                          </MenuItem>,
+                          <MenuItem key="move" onClick={() => setShowMoveOptions(true)} disabled={!selectedNode}>
+                              Move Node
+                          </MenuItem>,
+                      ]}
             </Menu>
-            <FieldErrorControl dataPath={dataPath} />
         </>
     );
 };

@@ -17,6 +17,11 @@ const initialTreeData: TreeNode[] = [
         label: 'Chapter 2',
         children: [],
     },
+    {
+        id: '3',
+        label: 'Chapter 3',
+        children: [],
+    },
 ];
 
 const CitationTree = () => {
@@ -40,13 +45,11 @@ const CitationTree = () => {
         <Paper className="paper">
             <Typography variant="h6">Citation Tree</Typography>
             <TreeControl
-                value={treeData}
-                dataPath="citations"
+                data={treeData}
                 label="Citations"
                 onAddNode={handleAddNode}
                 onDeleteNode={handleDeleteNode}
                 onMoveNode={handleMoveNode}
-                onNodeSelect={(nodeId) => console.log('Selected:', nodeId)}
             />
         </Paper>
     );
