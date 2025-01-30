@@ -1,0 +1,52 @@
+.container {
+    display: flex;
+    height: 100vh;
+    padding: 16px;
+    gap: 16px;
+}
+
+.section {
+    height: 100%;
+}
+
+.resizableWrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.dragHandle {
+    position: absolute;
+    right: -3px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    cursor: col-resize;
+    background-color: transparent;
+    transition: background-color 0.2s;
+    z-index: 1000;
+}
+
+.dragHandle:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Keep existing react-resizable styles */
+.react-resizable {
+    position: relative;
+}
+
+.react-resizable-handle {
+    position: absolute;
+    right: -3px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    cursor: col-resize;
+    background-color: transparent;
+    transition: background-color 0.2s;
+}
+
+.react-resizable-handle:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
