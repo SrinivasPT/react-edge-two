@@ -1,7 +1,7 @@
 export interface CitationGroup {
     citation_group_id: number;
     citation_group_name: string;
-    citations: Citation[];
+    citations: number[];
     functional_requirement: string;
     risk_level: string;
     penalty_details: string;

@@ -32,21 +32,28 @@ const ResizableGridItem: React.FC<ResizableGridItemProps> = ({ width, onResize, 
 const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
     const { id } = useParams();
     const [state, dispatch] = useImmerReducer<FormState, DispatchEvent>(pageReducer, { ...initialState, internal: { treeData: [] } });
-    const [sizes, setSizes] = React.useState([20, 40, 40]); // Initial percentages
+    const [sizes, setSizes] = React.useState([20, 40, 40]);
 
-    const { data, isPending, error } = useQuery({
-        queryKey: ['summarization', id], // Unique key for the query
-        queryFn: () => SummarizationLoader({ id }), // Fetch function
+    // Add enabled condition to ensure id exists
+    const {
+        data: loader,
+        isPending,
+        error,
+    } = useQuery({
+        queryKey: ['summarization', id],
+        queryFn: () => SummarizationLoader({ id: id! }),
+        enabled: !!id, // Only run query when id is available
     });
 
     useEffect(() => {
-        if (data) {
-            const { formConfig, internal } = data;
-            const treeData = internal.treeData as TreeNode[];
-            dispatch({ type: 'INITIALIZE_DATA', payload: { formConfig, treeData } });
+        if (!isPending && loader) {
+            const { formConfig, data, internal } = loader;
+            dispatch({ type: 'INITIALIZE_DATA', payload: { formConfig, data, internal } });
         }
-    }, [data, dispatch]);
+    }, [isPending, loader, dispatch]); // Added dispatch to dependencies
 
+    if (!id) return <div>No ID provided</div>;
+    if (error) return <div>Error loading data: {(error as Error).message}</div>;
     if (isPending) return <div>Loading...</div>;
 
     const handleResize =

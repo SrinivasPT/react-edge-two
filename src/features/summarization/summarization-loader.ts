@@ -14,7 +14,7 @@ export const SummarizationLoader = async (params: any) => {
     const data = clusterResponse.data;
 
     // Transform data into tree nodes
-    const treeData = getTreeNodes(data);
+    const treeData = getTreeNodes(data['groups'], data['citations']);
 
     // Return the combined data
     return {
@@ -24,16 +24,19 @@ export const SummarizationLoader = async (params: any) => {
     };
 };
 
-const getTreeNodes = (data: CitationGroup[]): TreeNode[] => {
-    const nodes = data.map((group: CitationGroup) => ({
+const getTreeNodes = (groups: CitationGroup[], citations: Citation[]): TreeNode[] => {
+    const nodes = groups.map((group: CitationGroup) => ({
         id: group.citation_group_id.toString(),
         label: group.citation_group_name,
-        children:
-            group.citations?.map((citation: Citation) => ({
-                id: citation.citation_id.toString(),
-                label: citation.citation_number,
+        children: group.citations.map((citation_id) => {
+            const citation = citations.find((c) => c.citation_id === citation_id);
+            return {
+                id: citation_id.toString(),
+                label: citation?.citation_number || '',
+                parentId: group.citation_group_id.toString(),
                 children: [] as TreeNode[],
-            })) || [],
+            };
+        }),
     }));
-    return nodes as TreeNode[];
+    return nodes;
 };

@@ -5,6 +5,7 @@ import { Menu, MenuItem } from '@mui/material';
 export interface TreeNode {
     id: string;
     label: string;
+    parentId?: string;
     children?: TreeNode[];
 }
 
@@ -84,7 +85,7 @@ export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode
     const renderTree = (node: TreeNode) => (
         <TreeItem
             key={node.id}
-            itemId={node.id}
+            itemId={`${node?.parentId || 'TOP'}-${node.id}`}
             label={
                 <div
                     role="button"
