@@ -87,12 +87,21 @@ export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode
             itemId={node.id}
             label={
                 <div
+                    role="button"
+                    tabIndex={0}
                     onContextMenu={(e) => handleContextMenu(e, node.id)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey)) {
+                            e.preventDefault();
+                            handleContextMenu(e as any, node.id);
+                        }
+                    }}
                     style={{
                         padding: '4px',
                         borderRadius: '4px',
                         userSelect: 'none',
                         width: '100%',
+                        cursor: 'context-menu',
                     }}
                 >
                     {node.label}
@@ -113,11 +122,23 @@ export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode
             <SimpleTreeView>{data.map(renderTree)}</SimpleTreeView>
             <Menu
                 open={contextMenu !== null}
-                disablePortal
+                disablePortal={false}
                 anchorReference="anchorPosition"
                 anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
                 onClose={handleMenuClose}
-                slotProps={{ paper: { elevation: 3, sx: { minWidth: 150 } } }}
+                slotProps={{
+                    paper: {
+                        elevation: 3,
+                        sx: { minWidth: 150 },
+                    },
+                    root: {
+                        'aria-label': 'Tree item actions',
+                    },
+                }}
+                MenuListProps={{
+                    'aria-label': 'Tree item actions',
+                    role: 'menu',
+                }}
             >
                 {showMoveOptions
                     ? [

@@ -19,4 +19,5 @@ export { SubmitButton } from './SubmitButton';
 export { SwitchControl } from './SwitchControl';
 export { TableControl } from './TableControl';
 export { TextControl } from './TextControl';
+export { TreeControl } from './TreeControl';
 export { ImageControl } from './ImageControl';

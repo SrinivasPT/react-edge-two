@@ -1,6 +1,7 @@
 import { fetcher } from 'lib';
 
 export const fetchFormData = async (config: any, id: any) => {
+    console.log('6. fetchFormData called', { config, id });
     const getNodeUrls = () => {
         if (id === null) {
             // List page

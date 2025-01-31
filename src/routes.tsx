@@ -1,13 +1,37 @@
-import { lazy } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import App from './App';
+import { SummarizationLoader } from 'features/summarization/summarization-loader';
+import { ErrorBoundary } from 'lib/common';
 
 const Summarization = lazy(() => import('./features/summarization/Summarization'));
 const GenericListPage = lazy(() => import('./features/generic/GenericListPage'));
-const GenericDetailPage = lazy(() => import('./features/generic/GenericDetailPage'));
 
-const routes = [
-    { path: '/summarization/:id', element: <Summarization entity="cluster" />, exact: true },
-    { path: '/cluster', element: <GenericListPage entity="cluster" />, exact: true },
-    // { path: '/cluster/:id', element: <GenericDetailPage entity="cluster" />, exact: true },
-];
+function Router() {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<App />}>
+                    <Route
+                        path="summarization/:id"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <Summarization entity="cluster" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="cluster"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <GenericListPage entity="cluster" />
+                            </Suspense>
+                        }
+                    />
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    );
+}
 
-export default routes;
+export default Router;

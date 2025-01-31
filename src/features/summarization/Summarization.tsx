@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Resizable, ResizeCallbackData } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 import styles from './Summarization.module.css';
-import { CitationTree, CitationDetails, LLMChatWindow } from 'components';
-import { PageContext, useFormDetail } from 'lib';
-import { useParams } from 'react-router-dom';
+import CitationDetails from './components/citation-details/CitationDetails';
+import CitationTree from './components/citation-tree/CitationTree';
+import LLMChatWindow from './components/llm-chat-window/LLMChatWindow';
+import { DispatchEvent, FormState, initialState, PageContext, pageReducer, TreeNode } from 'lib';
+import { useImmerReducer } from 'use-immer';
+import { useLoaderData, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { SummarizationLoader } from './summarization-loader';
 
 interface DragHandleProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -25,10 +30,24 @@ const ResizableGridItem: React.FC<ResizableGridItemProps> = ({ width, onResize, 
 };
 
 const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
-    const { id } = useParams<{ id: string }>();
-    const config = { url: 'cluster', formDetailConfig: 'form-config/FORM->CLUSTER-DETAIL' };
-    const { state, dispatch } = useFormDetail(id, { ...config, entity });
+    const { id } = useParams();
+    const [state, dispatch] = useImmerReducer<FormState, DispatchEvent>(pageReducer, { ...initialState, internal: { treeData: [] } });
     const [sizes, setSizes] = React.useState([20, 40, 40]); // Initial percentages
+
+    const { data, isPending, error } = useQuery({
+        queryKey: ['summarization', id], // Unique key for the query
+        queryFn: () => SummarizationLoader({ id }), // Fetch function
+    });
+
+    useEffect(() => {
+        if (data) {
+            const { formConfig, internal } = data;
+            const treeData = internal.treeData as TreeNode[];
+            dispatch({ type: 'INITIALIZE_DATA', payload: { formConfig, treeData } });
+        }
+    }, [data, dispatch]);
+
+    if (isPending) return <div>Loading...</div>;
 
     const handleResize =
         (index: number) =>

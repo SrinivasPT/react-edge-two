@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useImmerReducer } from 'use-immer';
 import { pageReducer } from '../context';
@@ -7,26 +7,27 @@ import { fetchFormData } from './util/fetchFormData';
 
 export const useFormDetail = (id: any, config: any) => {
     const [state, dispatch] = useImmerReducer<FormState, DispatchEvent>(pageReducer, initialState);
-
     const currentLocation = useLocation();
-
-    const entity = config['entity'];
+    const hasRun = useRef(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const newData = await fetchFormData(config, id);
-            dispatch({
-                type: 'INITIALIZE_DATA',
-                payload: {
-                    config: newData.config,
-                    data: id === 'new' ? {} : newData.data,
-                    internal: { formType: 'GENERIC_DETAIL', actionConfig: config, id, currentLocation },
-                },
-            });
-        };
+        if (!id || hasRun.current) return;
+        hasRun.current = true;
 
-        fetchData();
-    }, [id]);
+        console.log('Fetching data for id:', id);
+        fetchFormData(config, id)
+            .then((newData) => {
+                dispatch({
+                    type: 'INITIALIZE_DATA',
+                    payload: {
+                        config: newData.config,
+                        data: id === 'new' ? {} : newData.data,
+                        internal: { formType: 'GENERIC_DETAIL', actionConfig: config, id, currentLocation },
+                    },
+                });
+            })
+            .catch((err) => console.error('Fetch error:', err));
+    }, [id, config, currentLocation]);
 
     return { state, dispatch };
 };

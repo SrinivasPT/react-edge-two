@@ -1,11 +1,10 @@
 import { ErrorBoundary, fetcher, useError } from 'lib';
 import { Suspense, useCallback, useEffect, useMemo } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { useImmerReducer } from 'use-immer';
+import { Outlet } from 'react-router-dom';
 import './App.css';
 import { GlobalContext, globalReducer } from './lib/context';
 import { DispatchEvent, GlobalState, initialGlobalState } from './lib/types';
-import routes from './routes';
 
 function App() {
     const [globalState, globalDispatch] = useImmerReducer<GlobalState, DispatchEvent>(globalReducer, initialGlobalState);
@@ -18,7 +17,7 @@ function App() {
         } catch (error) {
             setError('Failed to fetch data. Please try again later.');
         }
-    }, [globalState.isLoading]);
+    }, []);
 
     useEffect(() => {
         fetchAppData();
@@ -31,27 +30,11 @@ function App() {
     }
 
     return (
-        <ErrorBoundary>
-            <GlobalContext.Provider value={contextValue}>
-                <Router>
-                    <Suspense fallback={<h3>Loading route...</h3>}>
-                        <Routes>
-                            {routes.map((route, index) => {
-                                const { path, element, children } = route as any;
-                                return (
-                                    <Route key={index} path={path} element={element}>
-                                        {children &&
-                                            children.map((child: any, childIndex: any) => (
-                                                <Route key={`${index}-${childIndex}`} path={child.path} element={child.element} />
-                                            ))}
-                                    </Route>
-                                );
-                            })}
-                        </Routes>
-                    </Suspense>
-                </Router>
-            </GlobalContext.Provider>
-        </ErrorBoundary>
+        <GlobalContext.Provider value={contextValue}>
+            <Suspense fallback={<h3>Loading route...</h3>}>
+                <Outlet />
+            </Suspense>
+        </GlobalContext.Provider>
     );
 }
 

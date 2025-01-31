@@ -18,7 +18,8 @@
         "jsx": "react-jsx",
         "paths": {
             "lib/*": ["lib/*"],
-            "components/*": ["components/*"]
+            "components/*": ["components/*"],
+            "features/*": ["features/*"]
         }
     },
     "include": ["src"]
