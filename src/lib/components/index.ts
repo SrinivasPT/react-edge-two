@@ -18,6 +18,7 @@ export { SpacerControl } from './SpacerControl';
 export { SubmitButton } from './SubmitButton';
 export { SwitchControl } from './SwitchControl';
 export { TableControl } from './TableControl';
+export { TextAreaControl } from './TextAreaControl';
 export { TextControl } from './TextControl';
 export { TreeControl } from './TreeControl';
 export { ImageControl } from './ImageControl';

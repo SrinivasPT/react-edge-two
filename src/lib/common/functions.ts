@@ -60,6 +60,8 @@ export const getWidthStyle = (widthStyle: string) => {
             return { xs: 12, sm: 6, md: 6, lg: 6, xl: 6 };
         case 'ONE_THIRD':
             return { xs: 12, sm: 4, md: 4, lg: 4, xl: 4 };
+        case 'TWO_THIRD':
+            return { xs: 12, sm: 8, md: 8, lg: 8, xl: 8 };
         case 'QUARTER':
             return { xs: 12, sm: 6, md: 4, lg: 3, xl: 3 };
         case 'ONE_FIFTH':

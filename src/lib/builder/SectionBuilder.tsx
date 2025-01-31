@@ -35,7 +35,7 @@ export const SectionBuilder: React.FC<{ sectionRefName: string; parentPath?: str
                         return (
                             <Grid
                                 item
-                                key={`row-${sectionDataPath}.${control.refName}`}
+                                key={`row-${sectionDataPath}.${control.key}`}
                                 {...getWidthStyle(control.width as string)}
                                 sx={{ maxWidth: '100%' }}
                             >

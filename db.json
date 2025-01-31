@@ -7,21 +7,54 @@
             "sections": ["section->cluster"],
             "sectionRepository": [
                 {
-                    "width": "FULL",
                     "refName": "section->cluster",
+                    "dataPath": "editCitation",
+                    "typeCode": "CARD_WITH_HEADER",
+                    "width": "FULL",
                     "controls": [
                         {
-                            "key": "productCode",
-                            "label": "Product",
+                            "key": "citation_id",
+                            "label": "Citation Id",
                             "width": "ONE_THIRD",
-                            "refName": "product_info=>product_code",
                             "typeCode": "TEXT",
-                            "displayOrder": "1",
-                            "sectionRefName": "section->product-detail"
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "citation_number",
+                            "label": "Citation Number",
+                            "width": "TWO_THIRD",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "functional_requirement",
+                            "label": "Functional Requirement",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "jurisdiction",
+                            "label": "Jurisdiction",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "risk_level",
+                            "label": "Risk Level",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "citation_text",
+                            "label": "Citation Text",
+                            "width": "FULL",
+                            "typeCode": "TEXT_AREA",
+                            "displayOrder": "1"
                         }
-                    ],
-                    "dataPath": "productDetail",
-                    "typeCode": "CARD_WITH_HEADER"
+                    ]
                 }
             ],
             "additionalSections": []

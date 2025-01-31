@@ -47,7 +47,10 @@ export const useControlState = (config: ControlConfig, parentPath: string) => {
         [dispatch]
     );
 
+    const controlId = `${parentPath ? `${parentPath}-` : ''}${dataPath}`;
+
     return {
+        controlId,
         key: config.key,
         dataPath,
         isVisible: !isHidden,

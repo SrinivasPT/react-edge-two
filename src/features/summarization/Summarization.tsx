@@ -9,7 +9,8 @@ import { DispatchEvent, FormState, initialState, PageContext, pageReducer, TreeN
 import { useImmerReducer } from 'use-immer';
 import { useLoaderData, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { SummarizationLoader } from './summarization-loader';
+import { useSummarization } from './use-summarization';
+// import { SummarizationLoader } from './summarization-loader';
 
 interface DragHandleProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -33,6 +34,7 @@ const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
     const { id } = useParams();
     const [state, dispatch] = useImmerReducer<FormState, DispatchEvent>(pageReducer, { ...initialState, internal: { treeData: [] } });
     const [sizes, setSizes] = React.useState([20, 40, 40]);
+    const { dataLoader } = useSummarization();
 
     // Add enabled condition to ensure id exists
     const {
@@ -41,14 +43,13 @@ const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
         error,
     } = useQuery({
         queryKey: ['summarization', id],
-        queryFn: () => SummarizationLoader({ id: id! }),
+        queryFn: () => dataLoader({ id: id! }),
         enabled: !!id, // Only run query when id is available
     });
 
     useEffect(() => {
         if (!isPending && loader) {
-            const { formConfig, data, internal } = loader;
-            dispatch({ type: 'INITIALIZE_DATA', payload: { formConfig, data, internal } });
+            dispatch({ type: 'INITIALIZE_DATA', payload: { ...loader } });
         }
     }, [isPending, loader, dispatch]); // Added dispatch to dependencies
 

@@ -15,9 +15,10 @@ export interface TreeControlProps {
     onAddNode: (node: TreeNode) => void;
     onDeleteNode: (nodeId: string) => void;
     onMoveNode: (nodeId: string, newParentId: string) => void;
+    onNodeSelect: (nodeId: string) => void;
 }
 
-export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode, onDeleteNode, onMoveNode }) => {
+export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode, onDeleteNode, onMoveNode, onNodeSelect }) => {
     const [contextMenu, setContextMenu] = useState<{
         mouseX: number;
         mouseY: number;
@@ -64,6 +65,10 @@ export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode
             setSelectedNodeId(null);
             handleMenuClose();
         }
+    };
+
+    const handleNodeSelect = (event: React.MouseEvent, nodeId: string) => {
+        onNodeSelect(nodeId);
     };
 
     const buildParentList = (nodes: TreeNode[], excludeId: string): TreeNode[] => {
@@ -120,7 +125,7 @@ export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode
     return (
         <>
             <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>{label}</div>
-            <SimpleTreeView>{data.map(renderTree)}</SimpleTreeView>
+            <SimpleTreeView onItemClick={handleNodeSelect}>{data.map(renderTree)}</SimpleTreeView>
             <Menu
                 open={contextMenu !== null}
                 disablePortal={false}

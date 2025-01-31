@@ -1,45 +1,14 @@
 import { PageContext } from 'lib/context';
-import { fetchFormData } from 'lib/hooks/util/fetchFormData';
+import { fetcher } from 'lib/thirdparty';
 import { TreeNode } from 'lib/types';
-import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Citation, CitationGroup } from 'types/citation';
+import { useContext } from 'react';
+import { CitationGroup, Citation } from 'types/citation';
 
 export const useSummarization = () => {
-    const { id } = useParams<{ id: string }>();
     const { state, dispatch } = useContext(PageContext);
-    const config = { url: 'cluster', formDetailConfig: 'form-config/FORM->CLUSTER-DETAIL', entity: 'cluster' };
-    const treeData = state.internal.treeData;
 
-    const initializeForm = async () => {
-        try {
-            const newData = await fetchFormData(config, id);
-            dispatch({
-                type: 'INITIALIZE_DATA',
-                payload: {
-                    config: newData.config,
-                    data: id === 'new' ? {} : newData.data,
-                    internal: { formType: 'GENERIC_DETAIL', actionConfig: config, id, treeData: getTreeNodes() },
-                },
-            });
-        } catch (err) {
-            console.error('Fetch error:', err);
-        }
-    };
-
-    const getTreeNodes = (): TreeNode[] => {
-        const data: CitationGroup[] = state.data.groups;
-        const nodes = data.map((group: CitationGroup) => ({
-            id: group.citation_group_id.toString(),
-            label: group.citation_group_name,
-            children:
-                group.citations?.map((citation: Citation) => ({
-                    id: citation.citation_id.toString(),
-                    label: citation.citation_number,
-                    children: [] as TreeNode[],
-                })) || [],
-        }));
-        return nodes as TreeNode[];
+    const handleNodeSelect = (nodeId: string) => {
+        console.log('Selected node:', nodeId);
     };
 
     const handleAddNode = (newNode: TreeNode) => {
@@ -55,11 +24,50 @@ export const useSummarization = () => {
         // Implement move logic here
     };
 
+    const dataLoader = async (params: any) => {
+        // Fetch data in parallel
+        const [formConfigResponse, clusterResponse] = await Promise.all([
+            fetcher.get('http://localhost:3001/form-config/FORM->CLUSTER-DETAIL'),
+            fetcher.get(`http://localhost:3001/cluster/${params.id}`),
+        ]);
+
+        // Extract data from responses
+        const config = formConfigResponse.data;
+        const data = clusterResponse.data;
+
+        // Transform data into tree nodes
+        const treeData = getTreeNodes(data['groups'], data['citations']);
+
+        // Return the combined data
+        return {
+            config,
+            data,
+            internal: { treeData },
+        };
+    };
+
+    const getTreeNodes = (groups: CitationGroup[], citations: Citation[]): TreeNode[] => {
+        const nodes = groups.map((group: CitationGroup) => ({
+            id: group.citation_group_id.toString(),
+            label: group.citation_group_name,
+            children: group.citations.map((citation_id) => {
+                const citation = citations.find((c) => c.citation_id === citation_id);
+                return {
+                    id: citation_id.toString(),
+                    label: citation?.citation_number || '',
+                    parentId: group.citation_group_id.toString(),
+                    children: [] as TreeNode[],
+                };
+            }),
+        }));
+        return nodes;
+    };
+
     return {
-        treeData,
+        dataLoader,
         handleAddNode,
         handleDeleteNode,
         handleMoveNode,
-        initializeForm,
+        handleNodeSelect,
     };
 };

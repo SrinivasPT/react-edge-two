@@ -6,10 +6,10 @@ import { ControlProps } from '../types/FormConfig';
 import { ControlLabel } from './ControlLabel';
 import { FieldErrorControl } from './FieldErrorControl';
 
-export const TextControl: React.FC<ControlProps> = ({ config, parentPath, additionalProps }) => {
+export const TextAreaControl: React.FC<ControlProps> = ({ config, parentPath, additionalProps }) => {
     const { controlId, key, dataPath, isVisible, isDisabled, isRequired, state, handleChange } = useControlState(config, parentPath);
     const value = getNestedValue(state.data, dataPath) || '';
-    const { hideLabel = false } = additionalProps;
+    const { hideLabel = false, rows = 3 } = additionalProps;
 
     if (!isVisible) return null;
 
@@ -27,6 +27,8 @@ export const TextControl: React.FC<ControlProps> = ({ config, parentPath, additi
                 variant="filled"
                 size="small"
                 fullWidth
+                multiline
+                rows={rows}
                 InputLabelProps={{ shrink: true }}
             />
             <FieldErrorControl dataPath={dataPath} />

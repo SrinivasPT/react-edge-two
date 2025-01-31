@@ -17,6 +17,7 @@ import {
     SpacerControl,
     SwitchControl,
     TableControl,
+    TextAreaControl,
     TextControl,
 } from '../components';
 import { SearchCriteriaControl } from '../components/SearchCriteriaControl';
@@ -44,6 +45,7 @@ export const ControlBuilder: React.FC<ControlProps> = ({ config, parentPath, add
         TABLE: TableControl,
         TABLE_EDITABLE_FULL: TableControl,
         TABLE_EDITABLE_ROW: TableControl,
+        TEXT_AREA: TextAreaControl,
         TEXT: TextControl,
     };
 
