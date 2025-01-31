@@ -9,6 +9,9 @@ export const useSummarization = () => {
 
     const handleNodeSelect = (nodeId: string) => {
         console.log('Selected node:', nodeId);
+        const citationId = nodeId.split('-')[1].trim();
+        const citation = state.data.citations.find((c: Citation) => c.citation_id.toString() === citationId);
+        dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'editCitation', value: citation } });
     };
 
     const handleAddNode = (newNode: TreeNode) => {
