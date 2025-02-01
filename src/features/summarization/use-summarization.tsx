@@ -32,6 +32,22 @@ export const useSummarization = () => {
         // Implement move logic here
     };
 
+    const onCitationAttributes = () => {
+        console.log('Citation Attributes');
+    };
+
+    const onGroupCitations = () => {
+        console.log('Group Citations');
+    };
+
+    const onGenerateSummary = () => {
+        console.log('Generate Summary');
+    };
+
+    const onGenerateSummaryCurrent = () => {
+        console.log('Generate Summary Current');
+    };
+
     const dataLoader = async (params: any) => {
         // Fetch data in parallel
         const [formClusterConfigResponse, formGroupConfigResponse, clusterResponse] = await Promise.all([
@@ -78,5 +94,9 @@ export const useSummarization = () => {
         handleDeleteNode,
         handleMoveNode,
         handleNodeSelect,
+        onCitationAttributes,
+        onGroupCitations,
+        onGenerateSummary,
+        onGenerateSummaryCurrent,
     };
 };

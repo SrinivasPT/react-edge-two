@@ -62,19 +62,6 @@ const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
     if (error) return <div>Error loading data: {(error as Error).message}</div>;
     if (isPending) return <div>Loading...</div>;
 
-    const handleAdd = () => {
-        /* Add handler */
-    };
-    const handleEdit = () => {
-        /* Edit handler */
-    };
-    const handleDelete = () => {
-        /* Delete handler */
-    };
-    const handleRefresh = () => {
-        /* Refresh handler */
-    };
-
     const handleResize =
         (index: number) =>
         (e: React.SyntheticEvent, { size }: ResizeCallbackData) => {
@@ -107,13 +94,7 @@ const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
     return (
         <PageContext.Provider value={{ state, dispatch }}>
             <div className={styles.pageWrapper}>
-                <ActionBar
-                    title="Document Summarization"
-                    onAdd={handleAdd}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onRefresh={handleRefresh}
-                />
+                <ActionBar />
                 <div className={styles.mainContent}>
                     <div className={styles.container}>
                         {/* First Section - Citation Tree */}

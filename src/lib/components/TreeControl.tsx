@@ -124,7 +124,6 @@ export const TreeControl: React.FC<TreeControlProps> = ({ data, label, onAddNode
 
     return (
         <>
-            <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>{label}</div>
             <SimpleTreeView onItemClick={handleNodeSelect}>{data.map(renderTree)}</SimpleTreeView>
             <Menu
                 open={contextMenu !== null}

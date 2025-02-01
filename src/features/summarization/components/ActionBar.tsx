@@ -4,16 +4,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
+import { useSummarization } from '../use-summarization';
 
-interface ActionBarProps {
-    title: string;
-    onAdd?: () => void;
-    onEdit?: () => void;
-    onDelete?: () => void;
-    onRefresh?: () => void;
-}
-
-export const ActionBar = ({ title, onAdd, onEdit, onDelete, onRefresh }: ActionBarProps) => {
+export const ActionBar = () => {
+    const { onCitationAttributes, onGroupCitations, onGenerateSummary, onGenerateSummaryCurrent } = useSummarization();
     return (
         <Box
             sx={{
@@ -38,16 +32,16 @@ export const ActionBar = ({ title, onAdd, onEdit, onDelete, onRefresh }: ActionB
                         fontSize: '1.1rem',
                     }}
                 >
-                    {title}
+                    {'Summarization'}
                 </Typography>
             </Stack>
 
             <Stack direction="row" spacing={1.5}>
                 {[
-                    { icon: <AddIcon />, label: 'Add', color: 'primary', onClick: onAdd },
-                    { icon: <EditIcon />, label: 'Edit', color: 'info', onClick: onEdit },
-                    { icon: <DeleteIcon />, label: 'Delete', color: 'error', onClick: onDelete },
-                    { icon: <RefreshIcon />, label: 'Refresh', color: 'success', onClick: onRefresh },
+                    { icon: <AddIcon />, label: 'Citation Attributes', color: 'primary', onClick: onCitationAttributes },
+                    { icon: <EditIcon />, label: 'Group Citations', color: 'info', onClick: onGroupCitations },
+                    { icon: <DeleteIcon />, label: 'Gen Summary', color: 'error', onClick: onGenerateSummary },
+                    { icon: <RefreshIcon />, label: 'Summary Current', color: 'success', onClick: onGenerateSummaryCurrent },
                 ].map((btn) => (
                     <Button
                         key={btn.label}
@@ -59,6 +53,7 @@ export const ActionBar = ({ title, onAdd, onEdit, onDelete, onRefresh }: ActionB
                         sx={{
                             py: '4px',
                             minHeight: '32px',
+                            width: '180px', // Added fixed width
                             fontWeight: 600,
                             textTransform: 'none',
                             boxShadow: 1,
