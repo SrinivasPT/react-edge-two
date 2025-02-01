@@ -9,9 +9,14 @@ export const useSummarization = () => {
 
     const handleNodeSelect = (nodeId: string) => {
         console.log('Selected node:', nodeId);
-        const citationId = nodeId.split('-')[1].trim();
-        const citation = state.data.citations.find((c: Citation) => c.citation_id.toString() === citationId);
-        dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'editCitation', value: citation } });
+        const itemId = nodeId.split('-')[1].trim();
+        const formConfig = nodeId.split('-')[0].trim() === 'TOP' ? state.internal.groupConfig : state.internal.clusterConfig;
+        const formData =
+            nodeId.split('-')[0].trim() === 'TOP'
+                ? state.data.groups.find((c: CitationGroup) => c.citation_group_id.toString() === itemId)
+                : state.data.citations.find((c: Citation) => c.citation_id.toString() === itemId);
+        dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'formDetail', value: formData } });
+        dispatch({ type: 'SET_CONFIG', payload: formConfig });
     };
 
     const handleAddNode = (newNode: TreeNode) => {
@@ -29,13 +34,15 @@ export const useSummarization = () => {
 
     const dataLoader = async (params: any) => {
         // Fetch data in parallel
-        const [formConfigResponse, clusterResponse] = await Promise.all([
+        const [formClusterConfigResponse, formGroupConfigResponse, clusterResponse] = await Promise.all([
             fetcher.get('http://localhost:3001/form-config/FORM->CLUSTER-DETAIL'),
+            fetcher.get('http://localhost:3001/form-config/FORM->GROUP-CLUSTER-DETAIL'),
             fetcher.get(`http://localhost:3001/cluster/${params.id}`),
         ]);
 
         // Extract data from responses
-        const config = formConfigResponse.data;
+        const clusterConfig = formClusterConfigResponse.data;
+        const groupConfig = formGroupConfigResponse.data;
         const data = clusterResponse.data;
 
         // Transform data into tree nodes
@@ -43,9 +50,8 @@ export const useSummarization = () => {
 
         // Return the combined data
         return {
-            config,
             data,
-            internal: { treeData },
+            internal: { treeData, clusterConfig, groupConfig },
         };
     };
 

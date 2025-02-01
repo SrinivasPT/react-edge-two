@@ -13,6 +13,10 @@ export const pageReducer = (draft: FormState, action: DispatchEvent) => {
             draft.flags.isDataLoading = false;
             break;
 
+        case 'SET_CONFIG':
+            draft.config = action.payload;
+            break;
+
         case 'SET_INTERNAL':
             draft.internal = action.payload;
             break;

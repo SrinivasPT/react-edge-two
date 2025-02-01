@@ -8,7 +8,7 @@
             "sectionRepository": [
                 {
                     "refName": "section->cluster",
-                    "dataPath": "editCitation",
+                    "dataPath": "formDetail",
                     "typeCode": "CARD_WITH_HEADER",
                     "width": "FULL",
                     "controls": [
@@ -52,6 +52,72 @@
                             "label": "Citation Text",
                             "width": "FULL",
                             "typeCode": "TEXT_AREA",
+                            "displayOrder": "1"
+                        }
+                    ]
+                }
+            ],
+            "additionalSections": []
+        },
+        {
+            "id": "FORM->GROUP-CLUSTER-DETAIL",
+            "buttons": "SAVE",
+            "refName": "form->group-cluster",
+            "sections": ["section->group-cluster"],
+            "sectionRepository": [
+                {
+                    "refName": "section->group-cluster",
+                    "dataPath": "formDetail",
+                    "typeCode": "CARD_WITH_HEADER",
+                    "width": "FULL",
+                    "controls": [
+                        {
+                            "key": "citation_group_id",
+                            "label": "Group Id",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "citation_group_name",
+                            "label": "Citation Group Name",
+                            "width": "FULL",
+                            "typeCode": "TEXT",
+                            "displayOrder": "2"
+                        },
+                        {
+                            "key": "citations",
+                            "label": "Citations",
+                            "width": "FULL",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "functional_requirement",
+                            "label": "Functional Requirement",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "risk_level",
+                            "label": "Risk Level",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "penalty_details",
+                            "label": "Penalty Details",
+                            "width": "FULL",
+                            "typeCode": "TEXT",
+                            "displayOrder": "1"
+                        },
+                        {
+                            "key": "frequency",
+                            "label": "Frequency",
+                            "width": "FULL",
+                            "typeCode": "TEXT",
                             "displayOrder": "1"
                         }
                     ]

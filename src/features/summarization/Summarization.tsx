@@ -2,15 +2,16 @@ import React, { useEffect } from 'react';
 import { Resizable, ResizeCallbackData } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 import styles from './Summarization.module.css';
-import CitationDetails from './components/citation-details/CitationDetails';
-import CitationTree from './components/citation-tree/CitationTree';
-import LLMChatWindow from './components/llm-chat-window/LLMChatWindow';
-import { DispatchEvent, FormState, initialState, PageContext, pageReducer, TreeNode } from 'lib';
+import CitationDetails from './components/CitationDetails';
+import LLMChatWindow from './components/LLMChatWindow';
+import { DispatchEvent, FormState, initialState, PageContext, pageReducer } from 'lib';
 import { useImmerReducer } from 'use-immer';
-import { useLoaderData, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useSummarization } from './use-summarization';
-// import { SummarizationLoader } from './summarization-loader';
+import CitationTree from './components/CitationTree';
+import { useParams } from 'react-router-dom';
+import { ActionBar } from './components/ActionBar';
+import { Footer } from './components/Footer';
 
 interface DragHandleProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -24,8 +25,16 @@ const DragHandle: React.FC<DragHandleProps> = ({ ...props }) => <div {...props} 
 
 const ResizableGridItem: React.FC<ResizableGridItemProps> = ({ width, onResize, children }) => {
     return (
-        <Resizable width={width} height={0} onResize={onResize} draggableOpts={{ enableUserSelectHack: false }} handle={<DragHandle />}>
-            <div className={styles.resizableWrapper}>{children}</div>
+        <Resizable
+            width={width}
+            height={Infinity}
+            onResize={onResize}
+            draggableOpts={{ enableUserSelectHack: false }}
+            handle={<DragHandle />}
+        >
+            <div className={styles.resizableWrapper}>
+                <div className={styles.sectionContent}>{children}</div>
+            </div>
         </Resizable>
     );
 };
@@ -37,30 +46,39 @@ const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
     const { dataLoader } = useSummarization();
 
     // Add enabled condition to ensure id exists
-    const {
-        data: loader,
-        isPending,
-        error,
-    } = useQuery({
+    const { data, isPending, error } = useQuery({
         queryKey: ['summarization', id],
         queryFn: () => dataLoader({ id: id! }),
         enabled: !!id, // Only run query when id is available
     });
 
     useEffect(() => {
-        if (!isPending && loader) {
-            dispatch({ type: 'INITIALIZE_DATA', payload: { ...loader } });
+        if (!isPending && data) {
+            dispatch({ type: 'INITIALIZE_DATA', payload: { ...data, config: {} } });
         }
-    }, [isPending, loader, dispatch]); // Added dispatch to dependencies
+    }, [isPending, data, dispatch]); // Added dispatch to dependencies
 
     if (!id) return <div>No ID provided</div>;
     if (error) return <div>Error loading data: {(error as Error).message}</div>;
     if (isPending) return <div>Loading...</div>;
 
+    const handleAdd = () => {
+        /* Add handler */
+    };
+    const handleEdit = () => {
+        /* Edit handler */
+    };
+    const handleDelete = () => {
+        /* Delete handler */
+    };
+    const handleRefresh = () => {
+        /* Refresh handler */
+    };
+
     const handleResize =
         (index: number) =>
         (e: React.SyntheticEvent, { size }: ResizeCallbackData) => {
-            const containerWidth = window.innerWidth - 32;
+            const containerWidth = document.querySelector(`.${styles.container}`)?.clientWidth ?? window.innerWidth - 32;
             const newPercentage = (size.width / containerWidth) * 100;
             const oldPercentage = sizes[index];
             const difference = newPercentage - oldPercentage;
@@ -88,27 +106,39 @@ const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
 
     return (
         <PageContext.Provider value={{ state, dispatch }}>
-            <div className={styles.container}>
-                {/* First Section - Citation Tree */}
-                <div style={{ width: `${sizes[0]}%` }} className={styles.section}>
-                    <ResizableGridItem width={(sizes[0] / 100) * (window.innerWidth - 32)} onResize={handleResize(0)}>
-                        <CitationTree />
-                    </ResizableGridItem>
-                </div>
+            <div className={styles.pageWrapper}>
+                <ActionBar
+                    title="Document Summarization"
+                    onAdd={handleAdd}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onRefresh={handleRefresh}
+                />
+                <div className={styles.mainContent}>
+                    <div className={styles.container}>
+                        {/* First Section - Citation Tree */}
+                        <div style={{ width: `${sizes[0]}%` }} className={styles.section}>
+                            <ResizableGridItem width={(sizes[0] / 100) * (window.innerWidth - 32)} onResize={handleResize(0)}>
+                                <CitationTree />
+                            </ResizableGridItem>
+                        </div>
 
-                {/* Second Section - Citation Details */}
-                <div style={{ width: `${sizes[1]}%` }} className={styles.section}>
-                    <ResizableGridItem width={(sizes[1] / 100) * (window.innerWidth - 32)} onResize={handleResize(1)}>
-                        <CitationDetails />
-                    </ResizableGridItem>
-                </div>
+                        {/* Second Section - Citation Details */}
+                        <div style={{ width: `${sizes[1]}%` }} className={styles.section}>
+                            <ResizableGridItem width={(sizes[1] / 100) * (window.innerWidth - 32)} onResize={handleResize(1)}>
+                                <CitationDetails />
+                            </ResizableGridItem>
+                        </div>
 
-                {/* Third Section - LLM Chat Window */}
-                <div style={{ width: `${sizes[2]}%` }} className={styles.section}>
-                    <ResizableGridItem width={(sizes[2] / 100) * (window.innerWidth - 32)} onResize={handleResize(2)}>
-                        <LLMChatWindow />
-                    </ResizableGridItem>
+                        {/* Third Section - LLM Chat Window */}
+                        <div style={{ width: `${sizes[2]}%` }} className={styles.section}>
+                            <ResizableGridItem width={(sizes[2] / 100) * (window.innerWidth - 32)} onResize={handleResize(2)}>
+                                <LLMChatWindow />
+                            </ResizableGridItem>
+                        </div>
+                    </div>
                 </div>
+                <Footer />
             </div>
         </PageContext.Provider>
     );
