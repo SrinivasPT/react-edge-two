@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import App from './App';
-import { SummarizationLoader } from 'features/summarization/summarization-loader';
-import { ErrorBoundary } from 'lib/common';
 
 const Summarization = lazy(() => import('./features/summarization/Summarization'));
 const GenericListPage = lazy(() => import('./features/generic/GenericListPage'));

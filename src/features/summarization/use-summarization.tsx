@@ -34,14 +34,28 @@ export const useSummarization = () => {
 
     const onCitationAttributes = () => {
         console.log('Citation Attributes');
+        fetcher.post(`http://localhost:8000/extract-citation-attributes`, state.data.citations).then((response) => {
+            console.log(response.data);
+            dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'citations', value: response.data } });
+        });
     };
 
     const onGroupCitations = () => {
         console.log('Group Citations');
+        fetcher.post(`http://localhost:8000/group-citations`, state.data.citations).then((response) => {
+            console.log(response.data);
+            const treeData = getTreeNodes(response.data, state.data['citations']);
+            dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'groups', value: response.data } });
+            dispatch({ type: 'SET_INTERNAL', payload: { ...state.internal, treeData } });
+        });
     };
 
     const onGenerateSummary = () => {
         console.log('Generate Summary');
+        fetcher.post(`http://localhost:8000/generate-summaries`, state.data.citations).then((response) => {
+            console.log(response.data);
+            dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'summaries', value: response.data } });
+        });
     };
 
     const onGenerateSummaryCurrent = () => {

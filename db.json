@@ -268,6 +268,29 @@
                     "citation_text": "The Annual Report containing information about the contents of safe deposit boxes must be filed before November 1, for financial organizations, and before May 1, for all other business associations, in the year in which the report is due. The Annual Report is to be submitted online. If a holder provides safe deposit boxes, then the Annual Report must be completed in its entirety, verified for accuracy, and filed regardless of whether a holder has abandoned safe deposit boxes to report. A \"negative report\" indicating no safe deposit box contents are being reported and remitted serves as a control to assist in detecting and preventing fraud or theft."
                 }
             ]
+        },
+        {
+            "id": "EDGE1004440",
+            "citations": [
+                {
+                    "citation_id": 1,
+                    "citation_number": "765 III. Comp. Stat. Ann. 1026/15-401(d)",
+                    "citation_text": " (d) A business association who has no reportable property shall so report to the administrator on forms via the Internet in a format approved by the administrator if the business association has:\n        (1) annual sales of more than $1,000,000;\n        (2) securities that are publicly traded;\n        (3) a net worth of more than $10,000,000; or\n        (4) more than 100 employees.\n    The administrator may increase one or more of the thresholds for filing a negative report by administrative rule."
+                },
+                {
+                    "citation_id": 2,
+                    "citation_number": "P.R. Regs. OCIF Reg. 8367 Art. 6(b)",
+                    "citation_text": "b) Toda instituci\u00f3n financiera o tenedor, que al 30 de junio de cualquier a\u00f1o no tuviere en su poder dinero y otros bienes l\u00edquidos que se presuman abandonados o no reclamados, deber\u00e1 rendir al Comisionado un informe negativo dentro del t\u00e9rmino prescrito por este Reglamento.\n\nEn aquellos casos en que la instituci\u00f3n financiera o tenedor leve menos de cinco (5) a\u00f1os operando y por tanto, no posea bienes l\u00edquidos abandonados o no reclamados, deber\u00e1 rendir al Comisionado un informe negativa haciendolo asi constar."
+                }
+            ],
+            "groups": [
+                {
+                    "citation_group_id": 0,
+                    "citation_group_name": "Ungrouped Citations",
+                    "citations": [1, 2]
+                }
+            ],
+            "summaries": []
         }
     ],
     "DOMAIN_DATA": []
