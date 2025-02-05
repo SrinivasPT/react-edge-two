@@ -4,11 +4,12 @@
             "id": "FORM->CLUSTER-DETAIL",
             "buttons": "SAVE",
             "refName": "form->cluster",
-            "sections": ["section->cluster"],
+            "sections": ["section->cluster-input", "section->cluster-derived"],
             "sectionRepository": [
                 {
-                    "refName": "section->cluster",
+                    "refName": "section->cluster-input",
                     "dataPath": "formDetail",
+                    "title": "Input Data",
                     "typeCode": "CARD_WITH_HEADER",
                     "width": "FULL",
                     "controls": [
@@ -24,35 +25,44 @@
                             "label": "Citation Number",
                             "width": "TWO_THIRD",
                             "typeCode": "TEXT",
-                            "displayOrder": "1"
-                        },
-                        {
-                            "key": "functional_requirement",
-                            "label": "Functional Requirement",
-                            "width": "HALF",
-                            "typeCode": "TEXT",
-                            "displayOrder": "1"
-                        },
-                        {
-                            "key": "jurisdiction",
-                            "label": "Jurisdiction",
-                            "width": "HALF",
-                            "typeCode": "TEXT",
-                            "displayOrder": "1"
-                        },
-                        {
-                            "key": "risk_level",
-                            "label": "Risk Level",
-                            "width": "HALF",
-                            "typeCode": "TEXT",
-                            "displayOrder": "1"
+                            "displayOrder": "2"
                         },
                         {
                             "key": "citation_text",
                             "label": "Citation Text",
                             "width": "FULL",
                             "typeCode": "TEXT_AREA",
-                            "displayOrder": "1"
+                            "displayOrder": "3"
+                        }
+                    ]
+                },
+                {
+                    "refName": "section->cluster-derived",
+                    "dataPath": "formDetail",
+                    "title": "Derived Data",
+                    "typeCode": "CARD_WITH_HEADER",
+                    "width": "FULL",
+                    "controls": [
+                        {
+                            "key": "functional_requirement",
+                            "label": "Functional Requirement",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "4"
+                        },
+                        {
+                            "key": "jurisdiction",
+                            "label": "Jurisdiction",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "5"
+                        },
+                        {
+                            "key": "risk_level",
+                            "label": "Risk Level",
+                            "width": "HALF",
+                            "typeCode": "TEXT",
+                            "displayOrder": "6"
                         }
                     ]
                 }
@@ -63,34 +73,37 @@
             "id": "FORM->GROUP-CLUSTER-DETAIL",
             "buttons": "SAVE",
             "refName": "form->group-cluster",
-            "sections": ["section->group-cluster"],
+            "sections": ["section->group-cluster-summary", "section->group-cluster-attributes"],
             "sectionRepository": [
                 {
-                    "refName": "section->group-cluster",
+                    "refName": "section->group-cluster-summary",
                     "dataPath": "formDetail",
+                    "title": "Group Summary",
                     "typeCode": "CARD_WITH_HEADER",
                     "width": "FULL",
                     "controls": [
                         {
-                            "key": "citation_group_id",
-                            "label": "Group Id",
-                            "width": "HALF",
-                            "typeCode": "TEXT",
+                            "key": "citation_group_summary",
+                            "label": "Summary",
+                            "width": "FULL",
+                            "typeCode": "TEXT_AREA",
                             "displayOrder": "1"
-                        },
+                        }
+                    ]
+                },
+                {
+                    "refName": "section->group-cluster-attributes",
+                    "dataPath": "formDetail",
+                    "title": "Group Attributes",
+                    "typeCode": "CARD_WITH_HEADER",
+                    "width": "FULL",
+                    "controls": [
                         {
                             "key": "citation_group_name",
                             "label": "Citation Group Name",
                             "width": "FULL",
                             "typeCode": "TEXT",
                             "displayOrder": "2"
-                        },
-                        {
-                            "key": "citations",
-                            "label": "Citations",
-                            "width": "FULL",
-                            "typeCode": "TEXT",
-                            "displayOrder": "1"
                         },
                         {
                             "key": "functional_requirement",
@@ -109,14 +122,14 @@
                         {
                             "key": "penalty_details",
                             "label": "Penalty Details",
-                            "width": "FULL",
+                            "width": "HALF",
                             "typeCode": "TEXT",
                             "displayOrder": "1"
                         },
                         {
                             "key": "frequency",
                             "label": "Frequency",
-                            "width": "FULL",
+                            "width": "HALF",
                             "typeCode": "TEXT",
                             "displayOrder": "1"
                         }
@@ -275,19 +288,48 @@
                 {
                     "citation_id": 1,
                     "citation_number": "765 III. Comp. Stat. Ann. 1026/15-401(d)",
-                    "citation_text": " (d) A business association who has no reportable property shall so report to the administrator on forms via the Internet in a format approved by the administrator if the business association has:\n        (1) annual sales of more than $1,000,000;\n        (2) securities that are publicly traded;\n        (3) a net worth of more than $10,000,000; or\n        (4) more than 100 employees.\n    The administrator may increase one or more of the thresholds for filing a negative report by administrative rule."
+                    "citation_text": " (d) A business association who has no reportable property shall so report to the administrator on forms via the Internet in a format approved by the administrator if the business association has:\n        (1) annual sales of more than $1,000,000;\n        (2) securities that are publicly traded;\n        (3) a net worth of more than $10,000,000; or\n        (4) more than 100 employees.\n    The administrator may increase one or more of the thresholds for filing a negative report by administrative rule.",
+                    "functional_requirement": "Negative Reporting",
+                    "risk_level": "MEDIUM",
+                    "applicable_entities": ["Business Associations"],
+                    "jurisdiction": "IL",
+                    "jurisdictional_nuances": [
+                        "The administrator may increase one or more of the thresholds for filing a negative report by administrative rule."
+                    ],
+                    "compliance_frequency": "Annually",
+                    "compliance_frequency_nuances": ["Report must be submitted by a specified deadline each year."],
+                    "penalty_conditions": "Failure to report may result in penalties as determined by the administrator.",
+                    "penalty_conditions_nuances": ["Penalties may vary based on the severity of non-compliance."],
+                    "procedural_nuances": []
                 },
                 {
                     "citation_id": 2,
                     "citation_number": "P.R. Regs. OCIF Reg. 8367 Art. 6(b)",
-                    "citation_text": "b) Toda instituci\u00f3n financiera o tenedor, que al 30 de junio de cualquier a\u00f1o no tuviere en su poder dinero y otros bienes l\u00edquidos que se presuman abandonados o no reclamados, deber\u00e1 rendir al Comisionado un informe negativo dentro del t\u00e9rmino prescrito por este Reglamento.\n\nEn aquellos casos en que la instituci\u00f3n financiera o tenedor leve menos de cinco (5) a\u00f1os operando y por tanto, no posea bienes l\u00edquidos abandonados o no reclamados, deber\u00e1 rendir al Comisionado un informe negativa haciendolo asi constar."
+                    "citation_text": "b) Toda instituci&oacute;n financiera o tenedor, que al 30 de junio de cualquier a&ntilde;o no tuviere en su poder dinero y otros bienes l&iacute;quidos que se presuman abandonados o no reclamados, deber&aacute; rendir al Comisionado un informe negativo dentro del t&eacute;rmino prescrito por este Reglamento.\n\nEn aquellos casos en que la instituci&oacute;n financiera o tenedor leve menos de cinco (5) a&ntilde;os operando y por tanto, no posea bienes l&iacute;quidos abandonados o no reclamados, deber&aacute; rendir al Comisionado un informe negativa haciendolo asi constar.",
+                    "functional_requirement": "Negative Reporting",
+                    "risk_level": "HIGH",
+                    "applicable_entities": ["Financial Institutions"],
+                    "jurisdiction": "PR",
+                    "jurisdictional_nuances": [
+                        "Institutions operating for less than five years must report even if they have no abandoned or unclaimed liquid assets."
+                    ],
+                    "compliance_frequency": "Annually",
+                    "compliance_frequency_nuances": ["Report must be submitted by June 30 each year."],
+                    "penalty_conditions": "Non-compliance may lead to sanctions imposed by the Commissioner.",
+                    "penalty_conditions_nuances": ["Sanctions may include fines or other regulatory actions."],
+                    "procedural_nuances": []
                 }
             ],
             "groups": [
                 {
-                    "citation_group_id": 0,
-                    "citation_group_name": "Ungrouped Citations",
-                    "citations": [1, 2]
+                    "citation_group_id": 1,
+                    "citation_group_name": "Negative Reporting",
+                    "citation_ids": [1, 2],
+                    "functional_requirement": "Negative Reporting",
+                    "risk_level": "Medium",
+                    "penalty_details": "Failure to report may result in administrative penalties or fines.",
+                    "frequency": "Annually",
+                    "automation_level": "Semi-automated"
                 }
             ],
             "summaries": []

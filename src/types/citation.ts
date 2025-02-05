@@ -1,12 +1,13 @@
 export interface CitationGroup {
     citation_group_id: number;
     citation_group_name: string;
-    citations: number[];
+    citation_ids: number[];
     functional_requirement: string;
     risk_level: string;
     penalty_details: string;
     frequency: string;
     automation_level: string;
+    citation_group_summary: string;
 }
 
 export interface Citation {

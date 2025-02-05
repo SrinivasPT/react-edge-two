@@ -52,9 +52,24 @@ export const useSummarization = () => {
 
     const onGenerateSummary = () => {
         console.log('Generate Summary');
-        fetcher.post(`http://localhost:8000/generate-summaries`, state.data.citations).then((response) => {
+        let payload: any[] = state.data.groups.map((group: CitationGroup) => ({
+            ...group,
+            citations:
+                group.citation_ids?.map((citation_id: number) =>
+                    state.data.citations.find((c: Citation) => c.citation_id === citation_id)
+                ) || [],
+        }));
+
+        fetcher.post(`http://localhost:8000/generate-summaries`, payload).then((response) => {
             console.log(response.data);
-            dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'summaries', value: response.data } });
+            let groups = state.data.groups;
+            groups = groups.map((group: CitationGroup) => {
+                const citation_group_summary = response.data.find(
+                    (s: any) => s.citation_group_id === group.citation_group_id
+                ).citation_group_summary;
+                return { ...group, citation_group_summary };
+            });
+            dispatch({ type: 'CONTROL_VALUE_CHANGE', payload: { dataPath: 'groups', value: groups } });
         });
     };
 
@@ -89,7 +104,7 @@ export const useSummarization = () => {
         const nodes = groups.map((group: CitationGroup) => ({
             id: group.citation_group_id.toString(),
             label: group.citation_group_name,
-            children: group.citations.map((citation_id) => {
+            children: group.citation_ids?.map((citation_id) => {
                 const citation = citations.find((c) => c.citation_id === citation_id);
                 return {
                     id: citation_id.toString(),
