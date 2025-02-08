@@ -42,7 +42,7 @@ const ResizableGridItem: React.FC<ResizableGridItemProps> = ({ width, onResize, 
 const Summarization: React.FC<{ entity: string }> = ({ entity }) => {
     const { id } = useParams();
     const [state, dispatch] = useImmerReducer<FormState, DispatchEvent>(pageReducer, { ...initialState, internal: { treeData: [] } });
-    const [sizes, setSizes] = React.useState([20, 40, 40]);
+    const [sizes, setSizes] = React.useState([20, 50, 30]);
     const { dataLoader } = useSummarization();
 
     // Add enabled condition to ensure id exists

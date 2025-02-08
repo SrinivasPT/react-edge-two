@@ -2,7 +2,7 @@ import { PageContext } from 'lib/context';
 import { fetcher } from 'lib/thirdparty';
 import { TreeNode } from 'lib/types';
 import { useContext } from 'react';
-import { CitationGroup, Citation } from 'types/citation';
+import { CitationGroup, Citation, Cluster } from 'types/citation';
 
 export const useSummarization = () => {
     const { state, dispatch } = useContext(PageContext);
@@ -88,7 +88,9 @@ export const useSummarization = () => {
         // Extract data from responses
         const clusterConfig = formClusterConfigResponse.data;
         const groupConfig = formGroupConfigResponse.data;
-        const data = clusterResponse.data;
+        const data: Cluster = clusterResponse.data?.groups?.length
+            ? clusterResponse.data
+            : { ...clusterResponse.data, groups: [ungroupedNode(clusterResponse.data)] };
 
         // Transform data into tree nodes
         const treeData = getTreeNodes(data['groups'], data['citations']);
@@ -99,6 +101,12 @@ export const useSummarization = () => {
             internal: { treeData, clusterConfig, groupConfig },
         };
     };
+
+    const ungroupedNode = (data: Cluster) => ({
+        citation_group_id: 0,
+        citation_group_name: 'Ungrouped',
+        citation_ids: data.citations.map((c) => c.citation_id),
+    });
 
     const getTreeNodes = (groups: CitationGroup[], citations: Citation[]): TreeNode[] => {
         const nodes = groups.map((group: CitationGroup) => ({
